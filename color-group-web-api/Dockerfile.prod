@@ -1,0 +1,15 @@
+# Production Environment Setup
+FROM node:16 AS production
+ENV NODE_ENV production
+
+WORKDIR /home/node/app
+
+# Copy over application files and install dependencies
+COPY package*.json .
+RUN npm ci
+COPY . .
+
+RUN npm run test
+
+USER node
+CMD ["npm", "run", "start"]

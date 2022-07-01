@@ -1,0 +1,57 @@
+# Development Compose
+version: "3.9"
+
+services:
+  database:
+    container_name: database
+    image: mongo:latest
+    restart: always
+    expose:
+      - "${DATABASE_PORT}"
+    volumes:
+      - ./database/database-volume:/data/db
+      - ./database/db-config-volume:/data/configdb
+
+  web-api:
+    container_name: web-api
+    image: color-group/web-api-dev
+    build:
+      context: ./color-group-web-api
+      target: development
+    restart: always
+    environment:
+      - PORT=${API_PORT}
+      - DB_HOST=database:${DATABASE_PORT}
+      - WEB_APP_ORIGIN=${WEB_DOMAIN}:${WEB_PORT}
+      - SEED_FILE=./data/input.json
+      # - WATCHPACK_POLLING=true
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    volumes:
+      - ./color-group-web-api:/home/node/app
+      - color-group-web-api-dev-data:/home/node/app/node_modules # Ensures the container local `node_modules` folder is used
+    depends_on:
+      - database
+
+  web:
+    container_name: color-group-web
+    image: color-group/web-dev
+    build:
+      context: ./color-group-web
+      target: development
+    restart: always
+    environment:
+      - REACT_APP_API_URL=http://localhost:${API_PORT}
+      - WATCHPACK_POLLING=true # Set special environment variable to enable hot reloading for development since we are using react-scripts v5.x.x
+      # - CHOKIDAR_USEPOLLING=true # Old way of enabling hot reloading on Windows
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    volumes:
+      - ./color-group-web:/home/node/app
+      - color-group-web-dev-data:/home/node/app/node_modules # Ensures the container local `node_modules` folder is used
+
+volumes:
+  color-group-web-api-dev-data:
+    name: color-group-web-api-dev-data
+  color-group-web-dev-data:
+    name: color-group-web-dev-data

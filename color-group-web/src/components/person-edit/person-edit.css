@@ -1,0 +1,27 @@
+.person-edit {
+    margin: 0.5rem;
+}
+
+.person-edit-form {
+    margin: 0.5rem 0;
+}
+
+.person-edit-form label {
+    font-weight: bold;
+}
+
+.person-edit-form input {
+    padding: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+}
+
+.person-edit-form input.disabled {
+    background-color: #ddd;
+}
+
+.warning {
+    font-weight: lighter;
+    font-size: 0.75rem;
+    color: #f00;
+}

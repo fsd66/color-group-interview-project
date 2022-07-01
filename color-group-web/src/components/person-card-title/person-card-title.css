@@ -1,0 +1,20 @@
+.person-card-title {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    width: 100%;
+}
+
+.person-card-title>div {
+    flex-basis: 100%;
+}
+
+.title-category-label {
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 600px) {
+    .title-category-label {
+        display: block;
+    }
+}

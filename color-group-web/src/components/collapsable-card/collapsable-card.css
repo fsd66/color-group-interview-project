@@ -1,0 +1,23 @@
+.collapsable-card {
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin: 1rem;
+}
+
+.collapsable-card-title {
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.open-arrow {
+    display: inline-block;
+    transition: transform 0.25s;
+    margin-right: 0.5rem;
+}
+
+.card-open {
+    transform: rotate(90deg);
+    transform-origin: 50% 50%;
+}

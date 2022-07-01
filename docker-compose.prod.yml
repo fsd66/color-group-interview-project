@@ -1,0 +1,48 @@
+# Production Compose
+version: "3.9"
+
+services:
+  database:
+    container_name: database
+    image: mongo:latest
+    restart: always
+    expose:
+      - "${DATABASE_PORT}"
+    volumes:
+      - color-group-db-data:/data/db
+      - color-group-db-config-data:/data/configdb
+
+  web-api:
+    container_name: web-api
+    image: color-group/web-api-prod
+    build:
+      context: ./color-group-web-api
+      dockerfile: Dockerfile.prod
+      target: production
+    restart: always
+    environment:
+      - PORT=${API_PORT}
+      - DB_HOST=database:${DATABASE_PORT}
+      - WEB_APP_ORIGIN=${WEB_DOMAIN}:${WEB_PORT}
+      - SEED_FILE=./data/input.json
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      - database
+
+  web:
+    container_name: color-group-web
+    image: color-group/web-prod
+    build:
+      context: ./color-group-web
+      dockerfile: Dockerfile.prod
+      target: production
+    restart: always
+    ports:
+      - "${WEB_PORT}:80"
+
+volumes:
+  color-group-db-data:
+    name: color-group-db-data
+  color-group-db-config-data:
+    name: color-group-db-config-data
